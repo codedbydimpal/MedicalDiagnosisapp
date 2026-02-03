@@ -1,7 +1,31 @@
 import requests
 from bs4 import BeautifulSoup
+from typing import List, Dict, Any
 
-def fetch_pubmed_articles_with_metadata(query: str, max_results=3, use_mock_if_empty=True):
+def fetch_pubmed_articles_with_metadata(
+    query: str, 
+    max_results: int = 3, 
+    use_mock_if_empty: bool = True
+) -> List[Dict[str, Any]]:
+    """
+    Fetch medical articles from PubMed based on search query.
+    
+    Args:
+        query: Search query for PubMed
+        max_results: Maximum number of articles to retrieve (default: 3)
+        use_mock_if_empty: Return mock data if no results found (default: True)
+    
+    Returns:
+        List of dictionaries containing article metadata:
+        - title: Article title
+        - abstract: Article abstract
+        - authors: List of author names
+        - publication_date: Publication date
+        - article_url: PubMed URL
+    
+    Raises:
+        Exception: If network error or API failure occurs
+    """
     headers = {"User-Agent": "Mozilla/5.0"}
 
     # Step 1: Search PubMed
