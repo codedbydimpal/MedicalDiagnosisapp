@@ -14,3 +14,7 @@ for var in REQUIRED_ENV_VARS:
         )
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Application constants
+MAX_ARTICLE_LENGTH = 3000
+MIN_TEXT_LENGTH = 10

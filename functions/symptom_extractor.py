@@ -33,7 +33,7 @@ def extract_symptoms(text: str) -> list[str]:
         
         # Validate that result is a list of strings
         if not isinstance(symptoms, list):
-            logger.warning(f"Invalid response type from GPT-4: {type(symptoms)}")
+            logger.warning("Invalid response format received from GPT-4")
             return []
         
         # Ensure all items are strings

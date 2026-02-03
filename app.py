@@ -4,6 +4,7 @@ from functions.symptom_extractor import extract_symptoms
 from functions.diagnosis_symptoms import get_diagnosis
 from functions.pubmed_articles import fetch_pubmed_articles_with_metadata
 from functions.summarize_pubmed import summarize_text
+from config import MAX_ARTICLE_LENGTH
 import logging
 
 logging.basicConfig(
@@ -36,7 +37,7 @@ class SymptomInput(BaseModel):
 @app.post("/diagnosis")
 async def diagnosis(data: SymptomInput):
     try:
-        logger.info(f"Received diagnosis request (length: {len(data.description)} chars)")
+        logger.info("Received diagnosis request")
         
         # Extract symptoms
         symptoms = extract_symptoms(data.description)
@@ -46,7 +47,7 @@ async def diagnosis(data: SymptomInput):
                 detail="No symptoms could be identified from the description. Please provide more details about your symptoms."
             )
         
-        logger.info(f"Extracted {len(symptoms)} symptoms")
+        logger.info("Symptoms extracted successfully")
         
         # Get diagnosis
         diagnosis_result = get_diagnosis(symptoms)
@@ -55,7 +56,6 @@ async def diagnosis(data: SymptomInput):
         pubmed_articles = fetch_pubmed_articles_with_metadata(" ".join(symptoms))
         
         # Smart truncation - only if needed and preserve structure
-        MAX_ARTICLE_LENGTH = 3000
         article_text = str(pubmed_articles)
         if len(article_text) > MAX_ARTICLE_LENGTH:
             article_text = article_text[:MAX_ARTICLE_LENGTH - 3] + "..."

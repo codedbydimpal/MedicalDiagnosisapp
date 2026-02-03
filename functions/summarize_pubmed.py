@@ -7,8 +7,8 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# Constant for minimum text length validation
-MIN_TEXT_LENGTH = 10
+# Import constant from config
+from config import MIN_TEXT_LENGTH
 
 def summarize_text(text: str) -> str:
     """Summarize medical research text."""

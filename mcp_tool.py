@@ -3,6 +3,7 @@ from functions.symptom_extractor import extract_symptoms
 from functions.diagnosis_symptoms import get_diagnosis
 from functions.pubmed_articles import fetch_pubmed_articles_with_metadata
 from functions.summarize_pubmed import summarize_text
+from config import MAX_ARTICLE_LENGTH
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -15,7 +16,7 @@ mcp = FastMCP("Clinisight AI")
 async def clinisight_ai(symptom_text: str):
     """Analyze symptoms and provide diagnosis with research."""
     try:
-        logger.info(f"Processing MCP request (length: {len(symptom_text)} chars)")
+        logger.info("Processing MCP request")
         
         symptoms = extract_symptoms(symptom_text)
         if not symptoms:
@@ -27,8 +28,7 @@ async def clinisight_ai(symptom_text: str):
         diagnosis_result = get_diagnosis(symptoms)
         pubmed_articles = fetch_pubmed_articles_with_metadata(" ".join(symptoms))
         
-        # Smart truncation constant
-        MAX_ARTICLE_LENGTH = 3000
+        # Smart truncation using shared constant
         article_text = str(pubmed_articles)
         if len(article_text) > MAX_ARTICLE_LENGTH:
             article_text = article_text[:MAX_ARTICLE_LENGTH - 3] + "..."
