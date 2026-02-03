@@ -7,9 +7,12 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# Constant for minimum text length validation
+MIN_TEXT_LENGTH = 10
+
 def summarize_text(text: str) -> str:
     """Summarize medical research text."""
-    if not text or len(text.strip()) < 10:
+    if not text or len(text.strip()) < MIN_TEXT_LENGTH:
         return "No content available to summarize."
     
     prompt = f"Summarize the following medical research information in a clear, concise manner:\n\n{text}"
@@ -29,3 +32,4 @@ def summarize_text(text: str) -> str:
     except Exception as e:
         logger.error(f"Error summarizing text: {e}")
         return "Unable to generate summary at this time."
+

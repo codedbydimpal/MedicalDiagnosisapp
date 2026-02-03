@@ -36,7 +36,7 @@ class SymptomInput(BaseModel):
 @app.post("/diagnosis")
 async def diagnosis(data: SymptomInput):
     try:
-        logger.info(f"Received diagnosis request for: {data.description[:50]}...")
+        logger.info(f"Received diagnosis request (length: {len(data.description)} chars)")
         
         # Extract symptoms
         symptoms = extract_symptoms(data.description)
@@ -46,7 +46,7 @@ async def diagnosis(data: SymptomInput):
                 detail="No symptoms could be identified from the description. Please provide more details about your symptoms."
             )
         
-        logger.info(f"Extracted symptoms: {symptoms}")
+        logger.info(f"Extracted {len(symptoms)} symptoms")
         
         # Get diagnosis
         diagnosis_result = get_diagnosis(symptoms)
@@ -55,9 +55,10 @@ async def diagnosis(data: SymptomInput):
         pubmed_articles = fetch_pubmed_articles_with_metadata(" ".join(symptoms))
         
         # Smart truncation - only if needed and preserve structure
+        MAX_ARTICLE_LENGTH = 3000
         article_text = str(pubmed_articles)
-        if len(article_text) > 3000:
-            article_text = article_text[:2997] + "..."
+        if len(article_text) > MAX_ARTICLE_LENGTH:
+            article_text = article_text[:MAX_ARTICLE_LENGTH - 3] + "..."
         
         summary = summarize_text(article_text)
         
